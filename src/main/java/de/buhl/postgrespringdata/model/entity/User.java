@@ -1,9 +1,12 @@
-package de.buhl.postgrespringdata.dto;
-import de.buhl.postgrespringdata.util.IdService;
+package de.buhl.postgrespringdata.model.entity;
+import de.buhl.postgrespringdata.model.entity.submodel.SteuerInfo;
+import de.buhl.postgrespringdata.model.entity.submodel.UserInfo;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
+
 @Entity
+
 public record User(
         @Id
         String id,

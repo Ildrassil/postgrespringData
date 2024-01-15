@@ -1,6 +1,7 @@
-package de.buhl.postgrespringdata.dto;
+package de.buhl.postgrespringdata.model.entity.submodel;
 
 public record UserInfo(
+        String email,
         String firstName,
         String lastName,
         String street,

@@ -1,16 +1,14 @@
 package de.buhl.postgrespringdata.service;
 
-import de.buhl.postgrespringdata.dto.User;
-import de.buhl.postgrespringdata.dto.UserRequest;
-import de.buhl.postgrespringdata.dto.UserResponse;
-import de.buhl.postgrespringdata.repo.UserRepo;
+import de.buhl.postgrespringdata.model.entity.User;
+import de.buhl.postgrespringdata.model.dto.UserRequest;
+import de.buhl.postgrespringdata.model.dto.UserResponse;
+import de.buhl.postgrespringdata.repository.UserRepo;
 import de.buhl.postgrespringdata.util.IdService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -19,16 +17,18 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserService {
 
-    @Autowired
+
     private final UserRepo userRepo;
+
 
     private final IdService idService;
 
-    List<User> getAllUser() throws RuntimeException{
+
+    public List<User> getAllUser() {
         return userRepo.findAll();
     }
 
-    User getUserByUserName( String userName) throws NoSuchElementException{
+    public User getUserByUserName( String userName) {
         List<User> userList = getAllUser();
         return userList.stream()
                 .filter(user -> user.username().equals(userName))
@@ -38,24 +38,25 @@ public class UserService {
 
 
 
-    void createUser(UserRequest userRequest) throws IllegalArgumentException {
+    public void createUser(UserRequest userRequest) {
 
-        List<User> userList = getAllUser();
-        Optional<User> user = Optional.of(userList.stream().filter(user1 -> user1.username().equals(userRequest.userName())).collect(Collectors.toList()).get(0));
-        if (user.isEmpty()) {
-            User user1 = new User(idService.randomId(), userRequest.userName(),
-                    userRequest.password(), userRequest.userInfo(), userRequest.steuerInfo());
-            userRepo.save(user1);
+        boolean doesUserExist = userRepo.existsByUsername(userRequest.userName());
+
+        if (!doesUserExist) {
+            User userToBeCreated = new User(idService.randomId(),userRequest.userName(),
+                    userRequest.password(),
+                    userRequest.userInfo(),
+                    userRequest.steuerInfo());
+            userRepo.save(userToBeCreated);
 
         }
         else throw new IllegalArgumentException("UserName already exist");
     }
 
-    UserResponse updateUserInfo(String id,UserRequest userRequest) throws NoSuchElementException{
+    public UserResponse updateUserInfo(String id,UserRequest userRequest) {
         Optional<User> isUser = userRepo.findById(id);
         if (isUser.isPresent()){
             User user = isUser.get();
-            userRepo.deleteById(user.id());
             userRepo.save(new User(user.id(), userRequest.userName(),
                     userRequest.password(), userRequest.userInfo(), userRequest.steuerInfo()));
             return new UserResponse(userRequest.userName(),userRequest.userInfo(),userRequest.steuerInfo());
@@ -65,7 +66,7 @@ public class UserService {
 
     }
 
-    UserResponse getUser(String id) throws NoSuchElementException{
+    public UserResponse getUser(String id) {
         Optional<User> user = userRepo.findById(id);
         if (user.isPresent()){
             User userEntity = user.get();
@@ -73,7 +74,7 @@ public class UserService {
         } else throw new NoSuchElementException("User does not Exist: " + user.get().username());
     }
 
-    void deleteUser(String id) throws NoSuchElementException{
+    public void deleteUser(String id) {
         Optional<User> userOptional = userRepo.findById(id);
         if (userOptional.isPresent()){
             userRepo.deleteById(userOptional.get().id());
