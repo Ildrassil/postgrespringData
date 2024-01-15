@@ -28,14 +28,6 @@ public class UserService {
         return userRepo.findAll();
     }
 
-    public User getUserByUserName( String userName) {
-        List<User> userList = getAllUser();
-        return userList.stream()
-                .filter(user -> user.username().equals(userName))
-                .collect(Collectors.toList())
-                .get(0);
-    }
-
 
 
     public void createUser(UserRequest userRequest) {
