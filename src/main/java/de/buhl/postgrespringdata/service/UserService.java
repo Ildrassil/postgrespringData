@@ -63,7 +63,7 @@ public class UserService {
         if (user.isPresent()){
             User userEntity = user.get();
             return new UserResponse(userEntity.username(),userEntity.userInfo(),userEntity.steuerInfo());
-        } else throw new NoSuchElementException("User does not Exist: " + user.get().username());
+        } else throw new NoSuchElementException("User does not Exist");
     }
 
     public void deleteUser(String id) {
@@ -71,7 +71,7 @@ public class UserService {
         if (userOptional.isPresent()){
             userRepo.deleteById(userOptional.get().id());
         } else {
-            throw new NoSuchElementException("User does not Exist: " + userOptional.get().username());
+            throw new NoSuchElementException("User does not Exist");
         }
     }
 
