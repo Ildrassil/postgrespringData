@@ -17,7 +17,7 @@ import java.util.NoSuchElementException;
 @RequestMapping("/api")
 public class RestControllerUserDB {
 
-    @Autowired
+
     private final UserService userService;
 
     @GetMapping("/users")
