@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -50,8 +50,10 @@ public class UserService {
         if (isUser.isPresent()){
             User user = isUser.get();
             userRepo.save(new User(user.id(), userRequest.userName(),
-                    userRequest.password(), userRequest.userInfo(), userRequest.steuerInfo()));
-            return new UserResponse(userRequest.userName(),userRequest.userInfo(),userRequest.steuerInfo());
+                    userRequest.password(), userRequest.userInfo(),
+                    userRequest.steuerInfo()));
+            return new UserResponse(userRequest.userName(),userRequest.userInfo(),
+                                    userRequest.steuerInfo());
 
         }
         else throw new NoSuchElementException("User doesnt exist with " + userRequest.userName());
