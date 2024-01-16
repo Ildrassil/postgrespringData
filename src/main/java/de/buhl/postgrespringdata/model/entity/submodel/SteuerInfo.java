@@ -1,25 +1,22 @@
 package de.buhl.postgrespringdata.model.entity.submodel;
 
-
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 
 import java.util.List;
 
-
+@Embeddable
 public record SteuerInfo(
 
         String steuerId,
         long jahresGehalt,
 
-        @JoinColumn(name = "tax_deductables_id")
-        @Embedded
+      @ElementCollection
         List<TaxDeductables> deductablesList,
 
-        @JoinColumn(name = "tax_free_income_id")
-        @Embedded
+        @ElementCollection
         List<TaxFreeIncome> taxFreeIncomeList
 ) {
 }

@@ -1,8 +1,8 @@
 package de.buhl.postgrespringdata.model.entity.submodel;
 
-import org.hibernate.annotations.Subselect;
+import jakarta.persistence.Embeddable;
 
-
+@Embeddable
 public record UserInfo(
         String email,
         String firstName,
