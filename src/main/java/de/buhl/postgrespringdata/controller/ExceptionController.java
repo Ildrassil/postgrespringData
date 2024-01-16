@@ -1,6 +1,6 @@
 package de.buhl.postgrespringdata.controller;
 
-import de.buhl.postgrespringdata.dto.ErrorMessage;
+import de.buhl.postgrespringdata.model.dto.ErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;

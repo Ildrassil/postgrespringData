@@ -1,5 +1,8 @@
 package de.buhl.postgrespringdata.model.entity.submodel;
 
+import org.hibernate.annotations.Subselect;
+
+
 public record UserInfo(
         String email,
         String firstName,

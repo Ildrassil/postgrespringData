@@ -1,4 +1,4 @@
-package de.buhl.postgrespringdata.dto;
+package de.buhl.postgrespringdata.model.dto;
 
 import java.time.Instant;
 
