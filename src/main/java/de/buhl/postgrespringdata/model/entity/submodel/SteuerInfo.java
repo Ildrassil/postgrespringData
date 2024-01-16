@@ -8,15 +8,18 @@ import jakarta.persistence.ManyToMany;
 
 import java.util.List;
 
+
 public record SteuerInfo(
 
         String steuerId,
         long jahresGehalt,
-        @ManyToMany(fetch = FetchType.LAZY)
+
         @JoinColumn(name = "tax_deductables_id")
+        @Embedded
         List<TaxDeductables> deductablesList,
-        @ManyToMany(fetch = FetchType.LAZY)
+
         @JoinColumn(name = "tax_free_income_id")
+        @Embedded
         List<TaxFreeIncome> taxFreeIncomeList
 ) {
 }

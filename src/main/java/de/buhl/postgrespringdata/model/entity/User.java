@@ -8,7 +8,7 @@ import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "user")
-@TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
+
 public record User(
         @Id
         @Column(name = "id")
@@ -17,11 +17,15 @@ public record User(
         String username,
         @Column(name="password")
         String password,
-        @Type(type = "jsonb")
-        @Column(columnDefinition = "jsonb")
+
+        @Column(name = "userInfo")
+        @JoinTable
+        @Embedded
         UserInfo userInfo,
-        @Type(type = "jsonb")
-        @Column(columnDefinition = "jsonb")
+
+        @Column(name = "steuerInfo")
+        @JoinTable
+        @Embedded
         SteuerInfo steuerInfo
 ) {
 
