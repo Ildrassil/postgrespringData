@@ -1,6 +1,7 @@
 package de.buhl.postgrespringdata.service;
 
-import de.buhl.postgrespringdata.model.entity.User;
+import de.buhl.postgrespringdata.model.entity.Nutzer;
+
 import de.buhl.postgrespringdata.model.dto.UserRequest;
 import de.buhl.postgrespringdata.model.dto.UserResponse;
 import de.buhl.postgrespringdata.repository.UserRepo;
@@ -24,7 +25,7 @@ public class UserService {
     private final IdService idService;
 
 
-    public List<User> getAllUser() {
+    public List<Nutzer> getAllUser() {
         return userRepo.findAll();
     }
 
@@ -35,7 +36,7 @@ public class UserService {
         boolean doesUserExist = userRepo.existsByUsername(userRequest.userName());
 
         if (!doesUserExist) {
-            User userToBeCreated = new User(idService.randomId(),userRequest.userName(),
+            Nutzer userToBeCreated = new Nutzer(idService.randomId(), userRequest.userName(),
                     userRequest.password(),
                     userRequest.userInfo(),
                     userRequest.steuerInfo());
@@ -46,10 +47,10 @@ public class UserService {
     }
 
     public UserResponse updateUserInfo(String id,UserRequest userRequest) {
-        Optional<User> isUser = userRepo.findById(id);
+        Optional<Nutzer> isUser = userRepo.findById(id);
         if (isUser.isPresent()){
-            User user = isUser.get();
-            userRepo.save(new User(user.id(), userRequest.userName(),
+            Nutzer user = isUser.get();
+            userRepo.save(new Nutzer(user.getId(), userRequest.userName(),
                     userRequest.password(), userRequest.userInfo(), userRequest.steuerInfo()));
             return new UserResponse(userRequest.userName(),userRequest.userInfo(),userRequest.steuerInfo());
 
@@ -59,17 +60,17 @@ public class UserService {
     }
 
     public UserResponse getUser(String id) {
-        Optional<User> user = userRepo.findById(id);
+        Optional<Nutzer> user = userRepo.findById(id);
         if (user.isPresent()){
-            User userEntity = user.get();
-            return new UserResponse(userEntity.username(),userEntity.userInfo(),userEntity.steuerInfo());
+            Nutzer userEntity = user.get();
+            return new UserResponse(userEntity.getUsername(),userEntity.getUserInfo(),userEntity.getSteuerInfo());
         } else throw new NoSuchElementException("User does not Exist");
     }
 
     public void deleteUser(String id) {
-        Optional<User> userOptional = userRepo.findById(id);
+        Optional<Nutzer> userOptional = userRepo.findById(id);
         if (userOptional.isPresent()){
-            userRepo.deleteById(userOptional.get().id());
+            userRepo.deleteById(userOptional.get().getId());
         } else {
             throw new NoSuchElementException("User does not Exist");
         }

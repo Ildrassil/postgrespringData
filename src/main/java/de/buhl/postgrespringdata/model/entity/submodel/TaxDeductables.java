@@ -5,7 +5,7 @@ import jakarta.persistence.Embeddable;
 
 @Embeddable
 public record TaxDeductables(
-        String id,
+        String deductableId,
         String name,
         long deductable
 ) {

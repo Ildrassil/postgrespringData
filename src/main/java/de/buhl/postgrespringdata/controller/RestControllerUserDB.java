@@ -2,7 +2,8 @@ package de.buhl.postgrespringdata.controller;
 
 import de.buhl.postgrespringdata.model.dto.UserRequest;
 import de.buhl.postgrespringdata.model.dto.UserResponse;
-import de.buhl.postgrespringdata.model.entity.User;
+import de.buhl.postgrespringdata.model.entity.Nutzer;
+
 import de.buhl.postgrespringdata.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class RestControllerUserDB {
 
     @GetMapping("/users")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public List<User> getAllUser() {
+    public List<Nutzer> getAllUser() {
         return userService.getAllUser();
     }
 
