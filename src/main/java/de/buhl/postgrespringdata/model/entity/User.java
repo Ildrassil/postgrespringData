@@ -8,11 +8,11 @@ import jakarta.persistence.*;
 @Table(name = "user")
 public record User(
         @Id
-        @Column(name = "id")
+
         String id,
-        @Column(name ="username")
+
         String username,
-        @Column(name="password")
+
         String password,
 
         @Embedded
