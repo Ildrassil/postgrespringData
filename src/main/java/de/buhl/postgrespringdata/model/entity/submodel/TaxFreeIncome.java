@@ -4,8 +4,11 @@ import jakarta.persistence.Embeddable;
 
 @Embeddable
 public record TaxFreeIncome(
-        String taxId,
+
+        String taxFreeIncomeId,
+
         String name,
+
         long amount
 ) {
 }
