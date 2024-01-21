@@ -17,11 +17,11 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SteuerInfo{
+public class TaxInfo {
 
-        private String steuerId;
+        private String taxId;
 
-        private long jahresGehalt;
+        private long salary;
 
         @ElementCollection(fetch = FetchType.EAGER)
         private List<TaxDeductables> deductablesList;

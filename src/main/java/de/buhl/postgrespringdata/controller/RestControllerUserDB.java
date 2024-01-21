@@ -2,7 +2,7 @@ package de.buhl.postgrespringdata.controller;
 
 import de.buhl.postgrespringdata.model.dto.UserRequest;
 import de.buhl.postgrespringdata.model.dto.UserResponse;
-import de.buhl.postgrespringdata.model.entity.Nutzer;
+import de.buhl.postgrespringdata.model.entity.AccountUser;
 
 import de.buhl.postgrespringdata.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class RestControllerUserDB {
 
     @GetMapping("/users")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public List<Nutzer> getAllUser() {
+    public List<AccountUser> getAllUser() {
         return userService.getAllUser();
     }
 
@@ -41,7 +41,8 @@ public class RestControllerUserDB {
     @PutMapping("/user/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public UserResponse updateUser(@PathVariable String id,
-                                   @RequestBody UserRequest userRequest) throws NoSuchElementException{
+                                   @RequestBody UserRequest userRequest)
+            throws NoSuchElementException{
         return userService.updateUserInfo(id,userRequest);
     }
 

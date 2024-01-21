@@ -10,6 +10,6 @@ public record TaxDeductables(
 
         String name,
 
-        long deductable
+        long deductableAmount
 ) {
 }

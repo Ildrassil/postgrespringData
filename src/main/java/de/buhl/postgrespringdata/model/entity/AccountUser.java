@@ -1,5 +1,5 @@
 package de.buhl.postgrespringdata.model.entity;
-import de.buhl.postgrespringdata.model.entity.submodel.SteuerInfo;
+import de.buhl.postgrespringdata.model.entity.submodel.TaxInfo;
 import de.buhl.postgrespringdata.model.entity.submodel.UserInfo;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,16 +9,18 @@ import lombok.NoArgsConstructor;
 
 
 @Entity
-@Table(name = "nutzer")
+@Table(name = "AccountUser")
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Nutzer{
+
+public class AccountUser {
 
         @Id
         private String id;
 
+        @Column(unique = true)
         private String username;
 
         private String password;
@@ -27,7 +29,7 @@ public class Nutzer{
         private UserInfo userInfo;
 
         @Embedded
-        private SteuerInfo steuerInfo;
+        private TaxInfo taxInfo;
 
 
 

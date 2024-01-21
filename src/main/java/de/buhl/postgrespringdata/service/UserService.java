@@ -1,6 +1,6 @@
 package de.buhl.postgrespringdata.service;
 
-import de.buhl.postgrespringdata.model.entity.Nutzer;
+import de.buhl.postgrespringdata.model.entity.AccountUser;
 
 import de.buhl.postgrespringdata.model.dto.UserRequest;
 import de.buhl.postgrespringdata.model.dto.UserResponse;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +24,7 @@ public class UserService {
     private final IdService idService;
 
 
-    public List<Nutzer> getAllUser() {
+    public List<AccountUser> getAllUser() {
         return userRepo.findAll();
     }
 
@@ -36,10 +35,12 @@ public class UserService {
         boolean doesUserExist = userRepo.existsByUsername(userRequest.userName());
 
         if (!doesUserExist) {
-            Nutzer userToBeCreated = new Nutzer(idService.randomId(), userRequest.userName(),
+            AccountUser userToBeCreated = new AccountUser(
+                    idService.randomId(),
+                    userRequest.userName(),
                     userRequest.password(),
                     userRequest.userInfo(),
-                    userRequest.steuerInfo());
+                    userRequest.taxInfo());
             userRepo.save(userToBeCreated);
 
         }
@@ -47,12 +48,12 @@ public class UserService {
     }
 
     public UserResponse updateUserInfo(String id,UserRequest userRequest) {
-        Optional<Nutzer> isUser = userRepo.findById(id);
+        Optional<AccountUser> isUser = userRepo.findById(id);
         if (isUser.isPresent()){
-            Nutzer user = isUser.get();
-            userRepo.save(new Nutzer(user.getId(), userRequest.userName(),
-                    userRequest.password(), userRequest.userInfo(), userRequest.steuerInfo()));
-            return new UserResponse(userRequest.userName(),userRequest.userInfo(),userRequest.steuerInfo());
+            AccountUser user = isUser.get();
+            userRepo.save(new AccountUser(user.getId(), userRequest.userName(),
+                    userRequest.password(), userRequest.userInfo(), userRequest.taxInfo()));
+            return new UserResponse(userRequest.userName(),userRequest.userInfo(),userRequest.taxInfo());
 
         }
         else throw new NoSuchElementException("User doesnt exist with " + userRequest.userName());
@@ -60,15 +61,15 @@ public class UserService {
     }
 
     public UserResponse getUser(String id) {
-        Optional<Nutzer> user = userRepo.findById(id);
+        Optional<AccountUser> user = userRepo.findById(id);
         if (user.isPresent()){
-            Nutzer userEntity = user.get();
-            return new UserResponse(userEntity.getUsername(),userEntity.getUserInfo(),userEntity.getSteuerInfo());
+            AccountUser userEntity = user.get();
+            return new UserResponse(userEntity.getUsername(),userEntity.getUserInfo(),userEntity.getTaxInfo());
         } else throw new NoSuchElementException("User does not Exist");
     }
 
     public void deleteUser(String id) {
-        Optional<Nutzer> userOptional = userRepo.findById(id);
+        Optional<AccountUser> userOptional = userRepo.findById(id);
         if (userOptional.isPresent()){
             userRepo.deleteById(userOptional.get().getId());
         } else {
