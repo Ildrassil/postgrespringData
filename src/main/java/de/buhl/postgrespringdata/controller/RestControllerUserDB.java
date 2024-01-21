@@ -23,13 +23,14 @@ public class RestControllerUserDB {
     @GetMapping("/users")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public List<AccountUser> getAllUser() {
-        return userService.getAllUser();
+        return userService.getAllUsers();
     }
 
     @GetMapping("/user/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public UserResponse getUser(@PathVariable String id) throws IllegalArgumentException{
-        return userService.getUser(id);
+    public UserResponse getUser(@PathVariable String id,
+    @RequestBody UserRequest userRequest) throws IllegalArgumentException{
+        return userService.getUser(id, userRequest);
     }
 
     @PostMapping("/user")

@@ -23,6 +23,11 @@ public class TaxInfo {
 
         private long salary;
 
+        private int taxClass;
+
+        private String taxOffice;
+
+
         @ElementCollection(fetch = FetchType.EAGER)
         private List<TaxDeductables> deductablesList;
 
