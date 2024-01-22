@@ -29,9 +29,9 @@ public class TaxInfo {
 
 
         @ElementCollection(fetch = FetchType.EAGER)
-        private List<TaxDeductables> deductablesList;
+        private List<TaxDeductible> deductablesList;
 
         @ElementCollection(fetch = FetchType.EAGER)
-        private List<TaxFreeIncome> taxFreeIncomeList;
+        private List<ExtraIncome> extraIncomeList;
 
 }

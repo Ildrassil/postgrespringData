@@ -4,12 +4,12 @@ package de.buhl.postgrespringdata.model.entity.submodel;
 import jakarta.persistence.Embeddable;
 
 @Embeddable
-public record TaxDeductables(
+public record TaxDeductible(
 
-        String deductableId,
+        String deductibleId,
 
         String name,
 
-        long deductableAmount
+        long deductibleAmount
 ) {
 }
