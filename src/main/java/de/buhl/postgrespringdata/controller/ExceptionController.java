@@ -14,7 +14,10 @@ public class ExceptionController {
     @ExceptionHandler({IllegalArgumentException.class})
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ErrorMessage globalIllegalArgumentExceptionHandler(IllegalArgumentException exception){
-        return new ErrorMessage("Username already exist!" + exception.getMessage());
+        if(exception.getMessage().contains("User")) {
+            return new ErrorMessage("Username already exist!" + exception.getMessage());
+        }
+        return new ErrorMessage("Wrong Password" + exception.getMessage());
     }
 
     @ExceptionHandler({NoSuchElementException.class})
@@ -22,4 +25,6 @@ public class ExceptionController {
     public ErrorMessage globalNoSuchElementExceptionHandler(NoSuchElementException exception){
         return new ErrorMessage("User with provided Id does not Exist" + exception.getMessage());
     }
+
+
 }
