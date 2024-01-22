@@ -9,7 +9,8 @@ Aufgabenstellung war:
 
   AccountUser Entity: (bsp. für einen Account in einem Steuerhilfsprogramm)
   Diese Entity beinhaltet einen Account der eine generierte 128-bit generierte Id beinhaltet
-  und überprüft ob der UserName bereits schon einmal benutzt wird.
+  und überprüft ob der UserName bereits schon einmal benutzt wird. Da dieser auch in der Daten-
+  bank als Unique gekennzeichnet wurde.
 
   Die UserInfo subclass ist für die speicherung der Persönlichen Informationen die der User
   für eine Steuer Erklärung bspw. bereitstellen müsste.
