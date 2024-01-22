@@ -52,9 +52,9 @@ class IntegrationAccountUserDatabaseTest {
     }
     @DynamicPropertySource
     static void setProperties(DynamicPropertyRegistry dynamicPropertyRegistry) {
-        dynamicPropertyRegistry.add("jdbc:postgresql://localhost:5432/postgres", postgreSQLContainer::getJdbcUrl);
-        dynamicPropertyRegistry.add("postgres", postgreSQLContainer::getUsername);
-        dynamicPropertyRegistry.add("123456789", postgreSQLContainer::getPassword);
+        dynamicPropertyRegistry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
+        dynamicPropertyRegistry.add("spring.datasource.username", postgreSQLContainer::getUsername);
+        dynamicPropertyRegistry.add("spring.datasource.password", postgreSQLContainer::getPassword);
     }
     @AfterAll
     static void cleanup() {
@@ -72,7 +72,7 @@ class IntegrationAccountUserDatabaseTest {
     void testGetAllUsers() throws Exception {
         //GIVEN
         String actual = ("""
-                [
+               
                 {
                 "id":"1",
                 "username": "test1",
@@ -86,42 +86,23 @@ class IntegrationAccountUserDatabaseTest {
                           "country": "Deutschland",
                           "companyName": "Musterfirma"
                           },
-                taxInfo:{
+                "taxInfo":{
                          "taxId":"123456789",
                          "salary": 54000,
                          "taxClass": 1,
                          "taxOffice":"Finanzamt Köln"
                          }
-                },
-                {
-                "id":"2", 
-                "username": "test2",
-                "password": "12345",
-                "userInfo":{
-                          "email": "blabla123@gmail.com",
-                           "firstName":"Julius",
-                            "lastName":"Caesar",
-                            "street": "musterstraße 2",
-                            "city": "Musterstadt 60599",
-                            "country": "Deutschland",
-                            "companyName": "Musterfirma"
-                            },
-                taxInfo:{
-                          "taxId:""123456789",
-                         "salary": 54000,
-                         "taxClass": 1,
-                         "taxOffice":"Finanzamt Köln"
-                         }
-               
-                }]""");
+                }""");
         //WHEN
         mockMvc.perform(post("/api/user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(actual))
-                //THEN
-                .andExpect(status().isCreated()).andReturn();
 
-                assertEquals(2, userRepo.findAll().size());
+                //THEN
+                .andExpect(status().isCreated());
+
+
+                assertEquals(1, userRepo.findAll().size());
         }
 
 
