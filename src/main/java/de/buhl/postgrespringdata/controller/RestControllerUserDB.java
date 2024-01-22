@@ -2,10 +2,10 @@ package de.buhl.postgrespringdata.controller;
 
 import de.buhl.postgrespringdata.model.dto.UserRequest;
 import de.buhl.postgrespringdata.model.dto.UserResponse;
-import de.buhl.postgrespringdata.model.entity.User;
+import de.buhl.postgrespringdata.model.entity.AccountUser;
+
 import de.buhl.postgrespringdata.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,14 +22,15 @@ public class RestControllerUserDB {
 
     @GetMapping("/users")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public List<User> getAllUser() {
-        return userService.getAllUser();
+    public List<AccountUser> getAllUser() {
+        return userService.getAllUsers();
     }
 
     @GetMapping("/user/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public UserResponse getUser(@PathVariable String id) throws IllegalArgumentException{
-        return userService.getUser(id);
+    public UserResponse getUser(@PathVariable String id,
+    @RequestBody UserRequest userRequest) throws IllegalArgumentException{
+        return userService.getUser(id, userRequest);
     }
 
     @PostMapping("/user")
@@ -41,7 +42,8 @@ public class RestControllerUserDB {
     @PutMapping("/user/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public UserResponse updateUser(@PathVariable String id,
-                                   @RequestBody UserRequest userRequest) throws NoSuchElementException{
+                                   @RequestBody UserRequest userRequest)
+            throws NoSuchElementException{
         return userService.updateUserInfo(id,userRequest);
     }
 

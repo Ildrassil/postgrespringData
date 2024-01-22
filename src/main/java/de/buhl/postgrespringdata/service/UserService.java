@@ -1,6 +1,7 @@
 package de.buhl.postgrespringdata.service;
 
-import de.buhl.postgrespringdata.model.entity.User;
+import de.buhl.postgrespringdata.model.entity.AccountUser;
+
 import de.buhl.postgrespringdata.model.dto.UserRequest;
 import de.buhl.postgrespringdata.model.dto.UserResponse;
 import de.buhl.postgrespringdata.repository.UserRepo;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,53 +23,78 @@ public class UserService {
 
     private final IdService idService;
 
-
-    public List<User> getAllUser() {
+    // Hier wird eine Liste aller User aus der Datenbank geholt.
+    // Diese Methode soll nur von einem Admin ausgeführt werden können.
+    // Diese müsste dementsprechend Verschlüsselt werden.
+    public List<AccountUser> getAllUsers() {
         return userRepo.findAll();
     }
 
-
-
+    // Damit ein User erstellt werden kann, wird überprüft ob der Username
+    // bereits existiert. Wenn nicht, wird der User erstellt.
     public void createUser(UserRequest userRequest) {
 
-        boolean doesUserExist = userRepo.existsByUsername(userRequest.userName());
+        Optional<AccountUser> doesUserExist  = userRepo.findByUsername(userRequest.userName());
 
-        if (!doesUserExist) {
-            User userToBeCreated = new User(idService.randomId(),userRequest.userName(),
+        if (doesUserExist.isEmpty()) {
+            AccountUser userToBeCreated = new AccountUser(
+                    idService.randomId(),
+                    userRequest.userName(),
                     userRequest.password(),
                     userRequest.userInfo(),
-                    userRequest.steuerInfo());
+                    userRequest.taxInfo());
             userRepo.save(userToBeCreated);
 
-        }
-        else throw new IllegalArgumentException("UserName already exist");
+        } else throw new IllegalArgumentException("UserName already exist");
+    }
+    //Um die daten zu aktualisieren, wird der User aus der Datenbank geholt
+    // und mit den neuen Daten gespeichert.
+    // Das Passwort wir hier auch überprüft, da es sonst möglich wäre, das
+    // ein User das Passwort eines anderen Users ändern könnte.
+    // Spring Security bietet hier eine gute Lösung, mit der ich allerdings
+    // noch nicht vertraut bin.
+    // Dies ist nur eine Lösung um die Funktionalität zu zeigen. Dieser simple
+    // Passwort validator kommt auch in der getUser Methode vor.
+    public UserResponse updateUserInfo(String id, UserRequest userRequest) {
+        Optional<AccountUser> isUser = userRepo.findById(id);
+
+        if (isUser.isPresent()) {
+            boolean password = isUser.get().getPassword().matches(userRequest.password());
+            if (password) {
+                AccountUser user = isUser.get();
+                userRepo.save(new AccountUser(user.getId(), userRequest.userName(),
+                        userRequest.password(), userRequest.userInfo(), userRequest.taxInfo()));
+                return new UserResponse(userRequest.userName(), userRequest.userInfo(), userRequest.taxInfo());
+
+            } else throw new IllegalArgumentException("Password is wrong");
+        } else throw new NoSuchElementException("User doesnt exist with " + userRequest.userName());
+
     }
 
-    public UserResponse updateUserInfo(String id,UserRequest userRequest) {
-        Optional<User> isUser = userRepo.findById(id);
-        if (isUser.isPresent()){
-            User user = isUser.get();
-            userRepo.save(new User(user.id(), userRequest.userName(),
-                    userRequest.password(), userRequest.userInfo(), userRequest.steuerInfo()));
-            return new UserResponse(userRequest.userName(),userRequest.userInfo(),userRequest.steuerInfo());
+    // Hier würde eine Abfrage auf die Datenbank erfolgen, ob der User existiert
+    // und ob das Passwort stimmt.
+    public UserResponse getUser(String id, UserRequest userRequest) {
+        Optional<AccountUser> user = userRepo.findById(id);
 
-        }
-        else throw new NoSuchElementException("User doesnt exist with " + userRequest.userName());
-
-    }
-
-    public UserResponse getUser(String id) {
-        Optional<User> user = userRepo.findById(id);
-        if (user.isPresent()){
-            User userEntity = user.get();
-            return new UserResponse(userEntity.username(),userEntity.userInfo(),userEntity.steuerInfo());
+        if (user.isPresent()) {
+            boolean password = user.get().getPassword().matches(userRequest.password());
+            if (password) {
+                AccountUser userEntity = user.get();
+                return new UserResponse(userEntity.getUsername(), userEntity.getUserInfo(), userEntity.getTaxInfo());
+            } else throw new IllegalArgumentException("Password is wrong");
         } else throw new NoSuchElementException("User does not Exist");
     }
 
+
+    // Hier wird der User aus der Datenbank geholt und gelöscht.
+    // Wenn der User nicht existiert, wird eine Exception geworfen.
+    // Dies soll eine reine Admin funktion sein und nicht von jedem User
+    // ausgeführt werden können. Die Verschlüsselung dafür ist noch nicht
+    // in meinem Wissen vorhanden.
     public void deleteUser(String id) {
-        Optional<User> userOptional = userRepo.findById(id);
-        if (userOptional.isPresent()){
-            userRepo.deleteById(userOptional.get().id());
+        boolean isUser = userRepo.existsById(id);
+        if (isUser) {
+            userRepo.deleteById(id);
         } else {
             throw new NoSuchElementException("User does not Exist");
         }
