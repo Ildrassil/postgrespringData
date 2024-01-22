@@ -34,9 +34,9 @@ public class UserService {
     // bereits existiert. Wenn nicht, wird der User erstellt.
     public void createUser(UserRequest userRequest) {
 
-        boolean doesUserExist = userRepo.existsByUsername(userRequest.userName());
+        Optional<AccountUser> doesUserExist  = userRepo.findByUsername(userRequest.userName());
 
-        if (!doesUserExist) {
+        if (doesUserExist.isEmpty()) {
             AccountUser userToBeCreated = new AccountUser(
                     idService.randomId(),
                     userRequest.userName(),
@@ -57,8 +57,9 @@ public class UserService {
     // Passwort validator kommt auch in der getUser Methode vor.
     public UserResponse updateUserInfo(String id, UserRequest userRequest) {
         Optional<AccountUser> isUser = userRepo.findById(id);
-        boolean password = isUser.get().getPassword().matches(userRequest.password());
+
         if (isUser.isPresent()) {
+            boolean password = isUser.get().getPassword().matches(userRequest.password());
             if (password) {
                 AccountUser user = isUser.get();
                 userRepo.save(new AccountUser(user.getId(), userRequest.userName(),
@@ -74,8 +75,9 @@ public class UserService {
     // und ob das Passwort stimmt.
     public UserResponse getUser(String id, UserRequest userRequest) {
         Optional<AccountUser> user = userRepo.findById(id);
-        boolean password = user.get().getPassword().matches(userRequest.password());
+
         if (user.isPresent()) {
+            boolean password = user.get().getPassword().matches(userRequest.password());
             if (password) {
                 AccountUser userEntity = user.get();
                 return new UserResponse(userEntity.getUsername(), userEntity.getUserInfo(), userEntity.getTaxInfo());
