@@ -12,18 +12,15 @@ import java.util.NoSuchElementException;
 public class ExceptionController {
 
     @ExceptionHandler({IllegalArgumentException.class})
-    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorMessage globalIllegalArgumentExceptionHandler(IllegalArgumentException exception){
-        if(exception.getMessage().contains("User")) {
-            return new ErrorMessage("Username already exist!" + exception.getMessage());
-        }
-        return new ErrorMessage("Wrong Password" + exception.getMessage());
+            return new ErrorMessage(exception.getMessage());
     }
 
     @ExceptionHandler({NoSuchElementException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorMessage globalNoSuchElementExceptionHandler(NoSuchElementException exception){
-        return new ErrorMessage("User with provided Id does not Exist" + exception.getMessage());
+        return new ErrorMessage(exception.getMessage());
     }
 
 

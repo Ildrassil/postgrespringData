@@ -90,9 +90,9 @@ public class UserService {
     // ausgeführt werden können. Die Verschlüsselung dafür ist noch nicht
     // in meinem Wissen vorhanden.
     public void deleteUser(String id) {
-        Optional<AccountUser> userOptional = userRepo.findById(id);
-        if (userOptional.isPresent()) {
-            userRepo.deleteById(userOptional.get().getId());
+        boolean isUser = userRepo.existsById(id);
+        if (isUser) {
+            userRepo.deleteById(id);
         } else {
             throw new NoSuchElementException("User does not Exist");
         }

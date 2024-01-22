@@ -15,8 +15,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 public class UserServiceUnitTest {
@@ -92,14 +91,14 @@ public class UserServiceUnitTest {
         AccountUser user1 = new AccountUser("1", "test", "1234", new UserInfo("1", "1", "1", "1", "1", "1", "1"), null);
         //WHEN
         when(userRepo.findById("1")).thenReturn(Optional.of(user1));
-        when(userRepo.save(user1)).thenReturn(user1);
-        userRepo.save(user1);
+        doNothing().when(userRepo).deleteById(user1.getId());
+
         userService.deleteUser("1");
 
-        Optional<AccountUser> actual = Optional.empty();
+
         //THEN
-        Optional<AccountUser> expected = Optional.empty();
-        assertEquals(actual, expected);
+
+        verify(userRepo, times(1)).deleteById("1");
     }
 
 
